@@ -20,21 +20,19 @@ import { ChatResponse } from './models/chat-response.model';
   providedIn: 'root'
 })
 export class ChatGptService {
-  private apiUrl = 'https://api.openai.com/v1/chat/completions';
-
+private apiUrl = 'http://127.0.0.1:8080/demo/answerpdf';
+ 
   constructor(private http: HttpClient) {}
-
-  chat(messages:  Array<{ role: string; content: string }>): Observable<ChatResponse> {
-    const body = {
-      model: 'gpt-3.5-turbo',
-      messages: messages,
-      temperature: 0.5, // adjust the temperature of the response - 0.5 works well with programming questions
-    };
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${environment.chatGptApiKey}` // see note on top
-    };
-
-    return this.http.post<ChatResponse>(this.apiUrl, body, { headers });
+ 
+  chat(messages:  Array<{ role: string; content: String }>): Observable<string> {
+ 
+    let HTTPOptions:Object = {
+ 
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      responseType: 'text'
+    }
+    return this.http.get<string>(`${this.apiUrl}?query=${messages[messages.length-1].content}`, HTTPOptions);
   }
 }
